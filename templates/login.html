@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}" />
+</head>
+<body>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    <form action="{{ url_for('validate_login') }}" method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Login</button>
+        </div>
+        
+        <div>
+            <select name="user" required>
+                <option value="admin" >Admin</option>
+                <option value="user">User</option>
+            </select>
+            <!-- <input type="radio" id="admin" name="user" value="Admin">
+            <label for="admin">Admin</label>
+            <input type="radio" id="user" name="user" value="User">
+            <label for="user">User</label> -->
+        </div>
+
+    </form>
+</body>
+</html>
