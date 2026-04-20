@@ -1,3 +1,4 @@
+from datetime import timedelta
 from functools import wraps
 from flask import Flask, flash, render_template, redirect, session, url_for,request
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -6,6 +7,7 @@ import sqlite3
 
 
 app = Flask(__name__)
+app.permanent_session_lifetime = timedelta(hours=1)  # Set session lifetime to 1 hour (3600 seconds)
  # Set a secret key for session management and flash messages
 app.secret_key = "TheMasterSeries1234" 
 # returning a string variable in the URL
@@ -40,7 +42,10 @@ def user_required(f):
 @app.route('/admin')
 @admin_required
 def admin():
-    return render_template('admin.html', admin_name=session.get('username'))    
+    if 'user_id' in session and session.get('user_type') == 'admin':
+        return render_template('admin.html', admin_name=session.get('username'))
+    
+    return render_template('/')    
 
 @app.route('/user')
 @user_required
@@ -129,15 +134,20 @@ def validate_login():
         stored_password = result[0]
         if stored_password and check_password_hash(stored_password, user_password):
 
-            session['username'] = username
-            session['user_type'] = user_type
+            session['user_id'] = user[0]
+            session['username'] = username[2]
+            session['user_type'] = user_type[4]
             session['logged_in'] = True
             session.permanent = True  # Make the session permanent (optional)
 
-            if user_type == 'admin':
-                return redirect(url_for('admin', username=username))
-            elif user_type == 'user':
-                return redirect(url_for('user', username=username))
+
+            return redirect(url_for('admin' if user_type == 'admin' else 'user'))
+        
+            # if user_type == 'admin':
+            #     return redirect(url_for('admin', username=username))
+            # elif user_type == 'user':
+            #     return redirect(url_for('user', username=username))
+    print(session) 
     flash("Invalid credentials. Please try again.", "error")
     return redirect(url_for('login_page'))
 # app.add_url_rule('/home', 'home', hello)
@@ -166,7 +176,7 @@ def blog_page(post_id):
 #     else:
 #         username = request.args.get('username')
 #         return redirect(url_for('user', guest_name=username))
-        
+          
 
 if __name__ == '__main__':
     app.run(debug=True)
