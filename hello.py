@@ -4,7 +4,7 @@ from flask import Flask, flash, render_template, redirect, session, url_for,requ
 from werkzeug.security import generate_password_hash, check_password_hash
 
 import sqlite3
-
+import logout
 
 app = Flask(__name__)
 app.permanent_session_lifetime = timedelta(hours=1)  # Set session lifetime to 1 hour (3600 seconds)
@@ -14,6 +14,10 @@ app.secret_key = "TheMasterSeries1234"
 @app.route('/', methods=['GET', 'POST'])
 def login_page():
     return render_template('login.html')
+
+@app.route('/logout')
+def logout_route():
+    return logout.logout_user()  # Call the logout function from the logout module
 
 # @app.route('/home/<name>')
 # def hello(name):
@@ -125,21 +129,21 @@ def validate_login():
     #fetchout user password from LoginDetails Table and compare the password with the hashed password in the database
     connectObj = sqlite3.connect('users.db')
     cursorObj = connectObj.cursor()
-    cursorObj.execute('SELECT password FROM LoginDetails WHERE username = ? AND user_type = ?',
+
+    cursorObj.execute('SELECT id,password FROM LoginDetails WHERE username = ? AND user_type = ?',
                        (username, user_type))
     result = cursorObj.fetchone()
     connectObj.close()
 
     if result:
-        stored_password = result[0]
+        user_id,stored_password = result
         if stored_password and check_password_hash(stored_password, user_password):
 
-            session['user_id'] = user[0]
-            session['username'] = username[2]
-            session['user_type'] = user_type[4]
+            session['user_id'] = user_id
+            session['username'] = username
+            session['user_type'] = user_type
             session['logged_in'] = True
             session.permanent = True  # Make the session permanent (optional)
-
 
             return redirect(url_for('admin' if user_type == 'admin' else 'user'))
         
@@ -150,6 +154,10 @@ def validate_login():
     print(session) 
     flash("Invalid credentials. Please try again.", "error")
     return redirect(url_for('login_page'))
+
+
+
+
 # app.add_url_rule('/home', 'home', hello)
 
 # returning html page with the render_template function
