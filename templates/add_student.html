@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Registration Form</title>
+</head>
+<body>
+     {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    <h1>New Student</h1>
+    <form action="/add_student" method="POST">
+        <label for="first_name">First Name:</label>
+        <input type="text" id="first_name" name="first_name" required><br><br>
+        
+        <label for="last_name">Last Name:</label>
+        <input type="text" id="last_name" name="last_name" required><br><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="@gmail.com" required><br><br>
+        
+        <label for="phone">Phone:</label>
+        <input type="tel" id="phone" name="phone" required><br><br>
+        
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required><br><br>
+      
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+        </select><br><br>
+        
+        <label for="grade">Grade:</label>
+        <select id="grade" name="grade" required>
+            <option value="" disabled selected>----Select Grade----</option>
+            <option value="1">Grade 1</option>
+            <option value="2">Grade 2</option>
+            <option value="3">Grade 3</option>
+            <option value="4">Grade 4</option>
+            <option value="5">Grade 5</option>
+            <option value="6">Grade 6</option>
+            <option value="7">Grade 7</option>
+            <option value="8">Grade 8</option>
+            <option value="9">Grade 9</option>
+            <option value="10">Grade 10</option>
+            <option value="11">Grade 11</option>
+            <option value="12">Grade 12</option>
+        </select><br><br>
+        
+        <div>
+        <label for="enrollment_date">Enrollment Date:</label>
+        <input type="date" id="enrollment_date" name="enrollment_date" required><br><br>
+        </div>
+
+          <div>
+        <label for="parent_name">Parent/Guardian Name:</label>
+        <input type="text" id="parent_name" name="parent_name" required><br><br>
+        </div>
+
+         <div>
+        <label for="address">Address:</label><br>
+        <textarea id="address" name="address" rows="3" cols="30"></textarea><br><br>
+        </div>
+        
+         <div>                                      
+        <button type="submit">Add Student</button>
+        <a href="{{ url_for('dashboard') }}">
+            <button type="button">Back to Dashboard</button>
+        </a>
+        <!-- <button type="button" id="cancel">Cancel</button> -->
+        </div>
+
+        <!-- <script src="{{ url_for('static', filename='global.js') }}"></script> -->
+        
+    </form>
+</body>
+</html>

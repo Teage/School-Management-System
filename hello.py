@@ -1,7 +1,8 @@
 from datetime import timedelta
 from functools import wraps
-from flask import Flask, flash, render_template, redirect, session, url_for,request
+from flask import Flask, abort, flash, render_template, redirect, session, url_for,request
 from werkzeug.security import generate_password_hash, check_password_hash
+import student_service
 
 import sqlite3
 import logout
@@ -15,6 +16,7 @@ app.secret_key = "TheMasterSeries1234"
 def login_page():
     return render_template('login.html')
 
+# Route for logging out the user
 @app.route('/logout')
 def logout_route():
     return logout.logout_user()  # Call the logout function from the logout module
@@ -28,6 +30,7 @@ def admin_required(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         if not session.get('logged_in') or session.get('user_type') != 'admin':
+            abort(403)
             flash("Unauthorized access. Please log in as an admin.", "error")
             return redirect(url_for('login_page'))
         return f(*args, **kwargs)
@@ -54,7 +57,10 @@ def admin():
 @app.route('/user')
 @user_required
 def user():
-    return render_template('user.html', guest_name=session.get('username'))
+    if 'user_id' in session and session.get('user_type') == 'user':
+        return render_template('user.html', guest_name=session.get('username'))
+    
+    return render_template('/')    
 
 
 # Initialize the SQLite database and create the users table if it doesn't exist
@@ -70,11 +76,16 @@ def init_db():
             user_type TEXT NOT NULL
         )
     ''')
+   
     connectObj.commit()
     connectObj.close()
 
     # call the function to initialize the database when the application starts
 init_db()
+
+
+
+
 
 
 #Register user
@@ -118,7 +129,7 @@ def register_user():
     # For GET request, render the registration form
     return render_template('register.html')
 
-
+    
 #password validation and redirection based on user type
 @app.route('/validate_login', methods=['POST'])
 def validate_login():                    
@@ -155,7 +166,7 @@ def validate_login():
     flash("Invalid credentials. Please try again.", "error")
     return redirect(url_for('login_page'))
 
-
+   
 
 
 # app.add_url_rule('/home', 'home', hello)
@@ -166,10 +177,29 @@ def validate_login():
 #     return render_template('index.html')
 
 
+@app.route('/dashboard')
+@admin_required 
+def dashboard():
+    return student_service.dashboard_page() 
 
-@app.route('/blog/<int:post_id>')
-def blog_page(post_id):
-    return f'This is blog post number {post_id}.'
+def create_stud_table():
+    student_service.create_students_table()  # Call the create_students_table function from the student_service module to create the Students table in the database
+
+@app.route('/add_student',methods=['POST','GET'])
+@admin_required
+def add_student_record():
+    return student_service.add_student()  # Call the add_student function from the student_service module to handle adding a new student
+
+
+# @app.route('/blog/<int:post_id>')
+# def blog_page(post_id):
+#     return f'This is blog post number {post_id}.'
+
+# Call the student_data function from the view_student module to fetch and display student data
+@app.route('/view_student' , methods=['GET', 'POST'])
+@admin_required
+def view_student():
+    return student_service.view_student_data()  # Call the view_student_data function from the student_service module to fetch and display student data
 
 # @app.route('/login/<username>', methods=['POST'])
 # def login(username):

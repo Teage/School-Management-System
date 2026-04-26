@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta content="Emmanuel P. Teage" name="author">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='admindashboard.css') }}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,10 +14,10 @@
             background-color: #f5f5f5;
         }
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0 0;
             background-color: white;
-            padding: 30px;
+            padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
@@ -49,12 +51,27 @@
     <div class="container">
         <h1>Welcome {{admin_name}} to Admin Dashboard</h1>
         <p class="welcome-message">Hello Admin! Manage your application from here.</p>
-        <div class="nav-links">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/users">Users</a>
-            <a href="/settings">Settings</a>
-            <a href="{{ url_for('logout_route') }}">Logout</a>
-        </div>
+       <div>
+            <div class="nav-links">
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="/users">Manage Users</a>
+                <a href="/settings">Settings</a>
+                <a href="{{ url_for('logout_route') }}">Logout</a>
+            </div>
+      </div> 
     </div>
+    <!-- <div class="sidebar">
+        <h2>DigitalSchool</h2>
+        <ul>
+            <li class="active">Dashboard</li>
+            <li>Students</li>
+            <li>Teachers</li>
+            <li>Courses</li>
+            <li>Attendance</li>
+            <li>Fees</li>
+            <li>Reports</li>
+            <li>Settings</li>
+        </ul>
+    </div> -->
 </body>
 </html>
