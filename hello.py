@@ -201,6 +201,10 @@ def add_student_record():
 def view_student():
     return student_service.view_student_data()  # Call the view_student_data function from the student_service module to fetch and display student data
 
+# @app.route('/search_stuent')
+# @admin_required
+# def search_student():
+#     student_service.search_student()
 # @app.route('/login/<username>', methods=['POST'])
 # def login(username):
 #     # Handle login logic here

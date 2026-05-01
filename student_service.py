@@ -65,17 +65,48 @@ def add_student():
 # def add_student():
 #     return render_template('add_student.html')
 
+# def search_student():
+#     students = []
+#     if request.method=='POST':
+#         search = request.form['search']
+#         connObj = sqlite3.connect('users.db')
+#         cursorObj = connObj.cursor()
+
+#         cursorObj.execute("""
+#         SELECT * FROM Students 
+#         WHERE first_name LIKE ? 
+#         OR last_name LIKE ? 
+#         OR roll_number = ? """, (f"%{search}%", f"%{search}%", search if search.startswith("ROLL") else -1))
+    
+#     return render_template('view_student',search=search)
+def get_all_students(cursor):
+     cursor.execute("SELECT * FROM Students")
+     return cursor.fetchall()
+
+def search_students(cursor, search):
+    cursor.execute("""
+        SELECT * FROM Students 
+        WHERE first_name LIKE ? 
+        OR last_name LIKE ? 
+        OR roll_number LIKE ?
+    """, (f"%{search}%", f"%{search}%", f"%{search}%"))
+    return cursor.fetchall()
+
 def view_student_data():
     
-    # if request.method == 'POST':
-            # search_query = request.form['search']
-            connObj = sqlite3.connect('users.db')
-            cursorObj = connObj.cursor()
-            cursorObj.execute("SELECT * FROM Students")
-            students = []
-            rows = cursorObj.fetchall()
-            for row in rows:
-                student = {
+    connObj = sqlite3.connect('users.db')
+    cursorObj = connObj.cursor()
+    
+    search = request.form.get('search') if request.method=='POST' else None
+            
+    if search:
+       rows = search_students(cursorObj,search)   
+    else:
+       rows = get_all_students(cursorObj)
+
+    students = []
+    for row in rows:
+        student = {
                     'id': row[0],
                     'roll_number': row[11],
                     'first_name': row[1],
@@ -90,12 +121,13 @@ def view_student_data():
                     'parent_name': row[10]
                 }
 
-                students.append(student)
-                 
-            cursorObj.close()
-            connObj.close()
-         
-            return render_template('view_student.html', students=students)
+        students.append(student)       
+        connObj.close()
+
+    return render_template('view_student.html', students=students)
+
+
+     
 
 # conn = sqlite3.connect('users.db')
 # cursor = conn.cursor()

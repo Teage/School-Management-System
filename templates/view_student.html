@@ -36,7 +36,6 @@
         <label for="search">Search by name:</label>
         <input type="text" id="search" name="search" placeholder="Enter first or last name or roll number">
         <button type="submit">Search</button>
-    </form>
         <table>
             <thead>
                 
@@ -78,9 +77,12 @@
                     </tr>
                 {% endfor %}
                 {% else %}
-                    <div class="empty">No student records found.</div>
+                   <tr>
+                        <td colspan="12">No student records found</td>
+                    </tr>
                  {% endif %}
             </tbody>
         </table>
+    </form>
 </body>
 </html>
