@@ -201,23 +201,22 @@ def add_student_record():
 def view_student():
     return student_service.view_student_data()  # Call the view_student_data function from the student_service module to fetch and display student data
 
-# @app.route('/search_stuent')
+@app.route('/delete_student/<int:id>', methods=['GET','POST'])
+@admin_required
+def delete_student(id):
+    return student_service.delete_student(id)  # Call the delete_student function from the student_service module to handle editing a student
+
+# @app.route('/edit_student/<int:id>', methods=['GET', 'POST'])
 # @admin_required
-# def search_student():
-#     student_service.search_student()
-# @app.route('/login/<username>', methods=['POST'])
-# def login(username):
-#     # Handle login logic here
-    
-#     password = request.form['password']
-#     # Validate credentials and perform login
-#     if request.method == 'POST':
-#         username = request.form['username']
-#         return redirect(url_for('index_page', username=username))
-#         # Process login form data
-#     else:
-#         username = request.args.get('username')
-#         return redirect(url_for('user', guest_name=username))
+# def edit_student(id):
+#     return student_service.edit_form(id)
+ 
+
+@app.route('/view_edit_student/<int:id>', methods=['GET', 'POST'])
+@admin_required
+def edit_student(id):
+    return student_service.view_record(id)
+
           
 
 if __name__ == '__main__':

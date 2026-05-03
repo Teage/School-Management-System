@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Student</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 640px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        form {
+            display: grid;
+            gap: 14px;
+        }
+        label {
+            font-weight: 600;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bbb;
+            border-radius: 4px;
+        }
+        button {
+            padding: 12px 18px;
+            border: none;
+            background: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056c0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Student</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+    <form action="{{ url_for('edit_student', id=student.id) }}" method="post">
+        {{ form.csrf_token() if form is defined else "" }}
+        <div>
+            <label for="id">ID</label>
+            <input id="id" name="id" type="text" value="{{ student.id }}" readonly>
+        </div>
+        <div>
+            <label for="roll_number">Roll Number</label>
+            <input id="roll_number" name="roll_number" type="text" value="{{ student.roll_number }}" required>
+        </div>
+        <div>
+            <label for="fname">first name</label>
+            <input id="first_name" name="first_name" type="text" value="{{ student.first_name  }}" required>
+        </div>
+        <div>
+            <label for="lname">last name</label>
+            <input id="last_name" name="last_name" type="text" value="{{ student.last_name }}" required>
+        </div>
+
+        <div>
+            <label for="phone">Phone</label>
+            <input id="phone" name="phone" type="tel" value="{{ student.phone }}" required>
+        </div>
+
+        <div>
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" value="{{ student.email }}" required>
+        </div>
+        <div>
+            <label for="grade">Grade</label>
+            <select id="grade" name="grade" required>
+                <option value="">Select grade</option>
+                {% for grade in ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'] %}
+                    <option value="{{ grade }}" {% if student.grade|string == grade %}selected{% endif %}>{{ grade }}</option>
+                {% endfor %}
+            </select>
+        </div>
+       <div>
+            <label for="dob">Date of Birth</label>
+            <input type="date" id="dob" name="dob" value="{{ student.dob }}" required>
+       </div>
+       <div>
+            <label for="gender">Gender</label>
+            <select id="gender" name="gender" required>
+                <option value="">Select gender</option>
+                <option value="male" {% if student.gender == 'male' %}selected{% endif %}>Male</option>
+                <option value="female" {% if student.gender == 'female' %}selected{% endif %}>Female</option>
+                <option value="other" {% if student.gender == 'other' %}selected{% endif %}>Other</option>
+            </select>
+       </div>
+       <div>
+            <label for="address">Address</label>
+            <textarea id="address" name="address" rows="3" cols="30">{{ student.address }}</textarea>
+       </div>
+        <div>
+            <label for="enrollment_date">Enrollment Date</label>
+            <input type="date" id="enrollment_date" name="enrollment_date" value="{{ student.enrollment_date }}" required>
+        </div>
+
+         <div>
+            <label for="parent_name">Parent/Guardian Name</label>
+            <input id="parent_name" name="parent_name" type="text" value="{{ student.parent_name }}" required>
+        </div>
+        <div>
+            <button type="submit">Save Changes</button>
+        </div>
+    </form>
+</body>
+</html>

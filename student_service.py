@@ -1,5 +1,5 @@
 import sqlite3
-from flask import flash, render_template, request
+from flask import flash, redirect, render_template, request, url_for
 import os
 print("DB PATH:", os.path.abspath('users.db'))
 
@@ -93,7 +93,6 @@ def search_students(cursor, search):
     return cursor.fetchall()
 
 def view_student_data():
-    
     connObj = sqlite3.connect('users.db')
     cursorObj = connObj.cursor()
     
@@ -151,3 +150,84 @@ def generate_roll_number():
     roll_number = f"ROLL{new_roll_number:04d}"
     connObj.close()
     return roll_number
+
+def delete_student(id):
+    connObj = sqlite3.connect('users.db')
+    cursorObj = connObj.cursor()
+    cursorObj.execute("DELETE FROM Students WHERE id=?", (id,))
+    connObj.commit()
+    connObj.close()
+    flash("You deleted a student successfully!", "success")
+    return render_template('view_student.html')
+
+
+def view_record(id):
+        connObj = sqlite3.connect('users.db')
+        connObj.row_factory = sqlite3.Row
+        cursorObj = connObj.cursor()
+        if request.method=='GET':
+            cursorObj.execute("SELECT * FROM Students WHERE id=?", (id,))
+            student = cursorObj.fetchone()
+            connObj.close()
+                # flash("You edited a student record successfully!", "success")
+            return render_template('edit_student_form.html', student=student)
+
+        if request.method=='POST':
+           
+            data = {
+                        "roll_number": request.form['roll_number'],
+                        "first_name": request.form['first_name'],
+                        "last_name": request.form['last_name'],
+                        "email": request.form['email'],
+                        "phone": request.form['phone'],
+                        "dob": request.form['dob'],
+                        "gender": request.form['gender'],
+                        "grade": request.form['grade'],
+                        "address": request.form['address'],
+                        "parent_name": request.form['parent_name']
+                    }
+            # first_name = request.form['first_name']
+            # last_name = request.form['last_name']
+            # email = request.form['email']
+            # phone = request.form['phone']
+            # dob = request.form['dob']
+            # gender = request.form['gender']
+            # grade = request.form['grade']
+            # address = request.form['address']
+            # parent_name = request.form['parent_name']
+            cursorObj.execute("UPDATE Students SET  roll_number =:roll_number,first_name=:first_name, last_name=:last_name,email=:email,phone=:phone,dob=:dob,gender=:gender,grade=:grade, address=:address, parent_name=:parent_name WHERE id=:id",
+                              ({**data, "id": id}))
+            connObj.commit()
+            connObj.close()
+            flash("You edited a student record successfully!", "success")
+            return redirect(url_for('view_student'))   
+
+# def edit_form(id):
+#     id = request.form['student_id']
+#     connObj = sqlite3.connect('users.db')
+#     cursorObj = connObj.cursor()
+#     cursorObj.execute("SELECT * FROM Students WHERE id=?", (id,))
+#     student = cursorObj.fetchone()
+#     connObj.close()
+#     flash("You edited a student record successfully!", "success")
+#     return render_template('edit_student.html', student=student)
+
+# def edit_student(id):
+#     connObj = sqlite3.connect('users.db')
+#     cursorObj = connObj.cursor()
+#     if request.method=='POST':
+#         first_name = request.form['first_name']
+#         last_name = request.form['last_name']
+#         email = request.form['email']
+#         phone = request.form['phone']
+#         dob = request.form['dob']
+#         gender = request.form['gender']
+#         grade = request.form['grade']
+#         address = request.form['address']
+#         parent_name = request.form['parent_name']
+#         cursorObj.execute("UPDATE Students SET first_name=?, last_name=?, email=?, phone=?, dob=?, gender=?, grade=?, address=?, parent_name=? WHERE id=?",
+#                           (first_name, last_name, email, phone, dob, gender, grade, address, parent_name, id))
+#         connObj.commit()
+#         connObj.close()
+#         flash("You edited a student successfully!", "success")
+#         return render_template('view_student.html')
