@@ -1,0 +1,105 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>View Teachers</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body> -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="{{ category }}">{{ message }}</div>
+        {% endfor %}
+    {% endwith %}
+    <form action="{{ url_for('view_teacher') }}" method="post">
+        <div class="align-header">
+        <div>
+            <label for="search">Search by name:</label>
+            <input type="text" id="search" name="search" placeholder="Enter first or last name or roll number">
+            <button type="submit">Search</button>
+        </div>
+    <!-- update filter to ajax respond -->
+        
+        <div>
+            <label for="grade">Filter by grade:</label>
+            <select id="grade" name="grade">
+                <option value="">All Grades</option>
+                <option value="1">Grade 1</option>
+                <option value="2">Grade 2</option>
+                <option value="3">Grade 3</option>
+                <option value="4">Grade 4</option>
+                <option value="5">Grade 5</option>
+                <option value="6">Grade 6</option>
+                <option value="7">Grade 7</option>
+                <option value="8">Grade 8</option>
+                <option value="9">Grade 9</option>
+                <option value="10">Grade 10</option>
+                <option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+            </select>
+            <button type="submit">Filter</button>
+        </div>
+        <div>
+            <button type="button" value="#">Add Teacher</button>
+        </div>
+    </div>
+        <h1>Teachers List</h1>
+    <table>
+        <tr>
+            <td>Teacher ID</td>
+            <td>Employee ID</td>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Subject</th>
+            <th>Actions</th>
+        </tr>
+        {% if teachers %}
+        {% for teacher in teachers %}
+        <tr>
+            <td>{{ teacher.teacher_id }}</td>
+            <td>{{ teacher.employee_id }}</td>
+            <td>{{ teacher.first_name }}</td>
+            <td>{{ teacher.last_name }}</td>
+            <td>{{ teacher.gender }}</td>
+            <td>{{ teacher.dob }}</td>
+            <td>{{ teacher.email }}</td>
+            <td>{{ teacher.phone }}</td>
+            <td>{{ teacher.subject }}</td>
+             <td>
+                <a href="{{ url_for('view_edit_teacher', id=teacher.teacher_id) }}">Edit</a>
+                <a href="{{ url_for('delete_teacher', id=teacher.teacher_id) }}"
+                onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <p>No teachers found.</p>
+        {% endif %}
+    </table> 
+    </form>
+    
+    
+<!-- </body>
+</html> -->

@@ -1,8 +1,8 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 
 <head>
-    <!-- <meta charset="UTF-8" />
-    <title>Student Data</title> -->
+ <meta charset="UTF-8" />
+    <title>Student Data</title> 
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -28,15 +28,45 @@
         }
     </style>
 </head>
-<body>
+<body> -->
     <h1>Student Records</h1>
 
     {% if session.get('user_type') == 'admin' %}
     <form action="{{ url_for('view_student') }}" method="POST">
+    <div class="align-header">
+        <div>
+            <label for="search">Search by name:</label>
+            <input type="text" id="search" name="search" placeholder="Enter first or last name or roll number">
+            <button type="submit">Search</button>
+        </div>
+    <!-- update filter to ajax respond -->
+        
+        <div>
+            <label for="grade">Filter by grade:</label>
+            <select id="grade" name="grade">
+                <option value="">All Grades</option>
+                <option value="1">Grade 1</option>
+                <option value="2">Grade 2</option>
+                <option value="3">Grade 3</option>
+                <option value="4">Grade 4</option>
+                <option value="5">Grade 5</option>
+                <option value="6">Grade 6</option>
+                <option value="7">Grade 7</option>
+                <option value="8">Grade 8</option>
+                <option value="9">Grade 9</option>
+                <option value="10">Grade 10</option>
+                <option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+            </select>
+            <button type="submit">Filter</button>
+        </div>
+        <div>
+            <button type="button" value="#" id="openModalBtn">Add Student</button>
+        </div>
+    </div>
         <!-- update search to ajax respond -->
-        <label for="search">Search by name:</label>
-        <input type="text" id="search" name="search" placeholder="Enter first or last name or roll number">
-        <button type="submit">Search</button>
+        
+        
         <table>
             <thead>
                 
@@ -92,5 +122,5 @@
         </table>
     </form>
     {% endif %}
-</body>
-</html>
+<!-- </body>
+</html> -->

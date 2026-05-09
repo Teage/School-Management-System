@@ -6,6 +6,7 @@ import student_service
 
 import sqlite3
 import logout
+import teacher_service
 
 app = Flask(__name__)
 app.permanent_session_lifetime = timedelta(hours=1)  # Set session lifetime to 1 hour (3600 seconds)
@@ -199,7 +200,7 @@ def add_student_record():
 @app.route('/view_student' , methods=['GET', 'POST'])
 @admin_required
 def view_student():
-    return student_service.view_student_data()  # Call the view_student_data function from the student_service module to fetch and display student data
+    return student_service.view_all_student_data()  # Call the view_student_data function from the student_service module to fetch and display student data
 
 @app.route('/delete_student/<int:id>', methods=['GET','POST'])
 @admin_required
@@ -215,9 +216,27 @@ def delete_student(id):
 @app.route('/view_edit_student/<int:id>', methods=['GET', 'POST'])
 @admin_required
 def edit_student(id):
-    return student_service.view_record(id)
+    return student_service.view_record_for_edit(id)
 
-          
+@app.route('/add_teacher', methods=['GET', 'POST'])
+@admin_required
+def register_teacher():
+    return teacher_service.add_teacher()
+
+@app.route('/view_teachers', methods=['GET', 'POST'])
+@admin_required
+def view_teacher():
+    return teacher_service.view_teachers()
+
+@app.route('/delete_teacher/<int:id>', methods=['GET', 'POST'])
+@admin_required
+def delete_teacher(id):
+    return teacher_service.delete_teacher_data(id)     
+
+@app.route('/view_edit_teacher/<int:id>', methods=['GET', 'POST'])
+@admin_required
+def view_edit_teacher(id):
+    return teacher_service.view_teacher_for_edit(id)     
 
 if __name__ == '__main__':
     app.run(debug=True)

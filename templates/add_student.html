@@ -1,11 +1,12 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Registration Form</title>
 </head>
-<body>
+<body> -->
+    
      {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
             {% for category, message in messages %}
@@ -22,9 +23,6 @@
         
         <label for="last_name">Last Name:</label>
         <input type="text" id="last_name" name="last_name" required><br><br>
-        
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" placeholder="@gmail.com" required><br><br>
         
         <label for="phone">Phone:</label>
         <input type="tel" id="phone" name="phone" required><br><br>
@@ -67,9 +65,16 @@
         </div>
 
          <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+         <div>
         <label for="address">Address:</label><br>
         <textarea id="address" name="address" rows="3" cols="30"></textarea><br><br>
         </div>
+
+       
         
          <div>                                      
         <button type="submit">Add Student</button>
@@ -82,5 +87,5 @@
         <!-- <script src="{{ url_for('static', filename='global.js') }}"></script> -->
         
     </form>
-</body>
-</html>
+<!-- </body>
+</html> -->

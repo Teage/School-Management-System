@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Teacher</title>
+</head>
+<body>
+    <h1>Teacher Registration Form</h1>
+     {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+    <form action="/add_teacher" method="POST" autocomplete="on">
+        <fieldset>
+            <legend>Personal Information</legend>
+            <label for="first_name">First name:</label>
+            <input type="text" id="first_name" name="first_name" required><br><br>
+
+            <label for="last_name">Last name:</label>
+            <input type="text" id="last_name" name="last_name" required><br><br>
+            
+            <radiogroup>
+                <label for="gender">Gender:</label>
+                <input type="radio"  name="gender" value="male" required>
+                <label for="male">Male</label>
+                <input type="radio"  name="gender" value="female" required>
+                <label for="female">Female</label>
+                <input type="radio"  name="gender" value="other" required>
+                <label for="other">Other</label>
+            </radiogroup><br><br>
+            
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required><br><br>
+        </fieldset>
+        <fieldset>
+            <legend>Contact Information</legend>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Email" required><br><br>
+            <label for="phone">Phone:</label>
+            <input type="tel" id="phone" name="phone" placeholder="Phone" required><br><br>
+            <label for="subject">Subject:</label>
+            <input type="text" id="subject" name="subject" required>
+            <!-- <label for="address">Address:</label>
+            <input type="text" id="address" name="address" placeholder="Address" required><br><br> -->
+            <!-- <label for="city">City:</label>
+            <input type="text" id="city" name="city" placeholder="City" required><br><br>
+            <label for="state">State/County:</label>
+            <input list="Counties" id="state" name="state" placeholder="State/County" required>
+            <datalist id="Counties">
+                <option value="Montserrado">
+                <option value="Margibi">
+                <option value="Bong">
+                <option value="Bomi">
+                <option value="Grand cape Mount">
+                <option value="Grand Bassa">
+                <option value="Lofa">
+                <option value="Maryland">
+                <option value="Sinoe">
+                <option value="Grand Gedeh">
+                <option value="Gbarpolu">
+                <option value="Nimba">
+                <option value="Barpolu">
+                <option value="Borpolu">
+                <option value="Revercess">
+                <option value="Rever Gee">
+            </datalist><br><br>
+            <label for="zip">Zip Code:</label>
+            <input type="text" id="zipcode" name="zipcode" placeholder="Zip Code" required><br><br>
+            <label for="street">Street:</label>
+            <input type="text" id="street" name="street" placeholder="Street" required><br><br>
+        </fieldset>
+        <fieldset>
+            <legend>Teaching Information</legend>
+            <label for="qualifications">Qualifications:</label>
+            <input type="text" id="qualifications" name="qualifications" placeholder="Qualifications" required><br><br>
+            <label for="hiredate">Hire Date:</label>
+            <input type="date" id="hiredate" name="hiredate" required><br><br>
+            <label for="employeeid">Employee ID:</label> auto generated in db 
+        </fieldset> -->
+        <input type="submit" value="Register Teacher">
+    </form>
+     
+</body>
+</html>

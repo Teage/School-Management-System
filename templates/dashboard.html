@@ -16,8 +16,8 @@
     <div class="dashboard">
         <a href="/add_student">Add Student</a>
         <a href="{{ url_for('view_student') }}">View Students</a>
-        <a href="#/add_teacher">Add Teacher</a>
-         <a href="#/view_teachers">View Teachers</a>
+        <a href="{{ url_for('register_teacher') }}">Add Teacher</a>
+         <a href="{{ url_for('view_teacher') }}">View Teachers</a>
         <a href="#/reports">Generate Report</a>
     </div>
 </body>

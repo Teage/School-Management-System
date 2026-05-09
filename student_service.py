@@ -7,6 +7,7 @@ print("DB PATH:", os.path.abspath('users.db'))
 def dashboard_page():
     return render_template('dashboard.html')
 
+#------------------Students Section-------------------------
 def create_students_table():
     connectObj = sqlite3.connect('users.db')
     cursorObj = connectObj.cursor()
@@ -92,7 +93,7 @@ def search_students(cursor, search):
     """, (f"%{search}%", f"%{search}%", f"%{search}%"))
     return cursor.fetchall()
 
-def view_student_data():
+def view_all_student_data():
     connObj = sqlite3.connect('users.db')
     cursorObj = connObj.cursor()
     
@@ -121,7 +122,7 @@ def view_student_data():
                 }
 
         students.append(student)       
-        connObj.close()
+    connObj.close()
 
     return render_template('view_student.html', students=students)
 
@@ -161,7 +162,7 @@ def delete_student(id):
     return render_template('view_student.html')
 
 
-def view_record(id):
+def view_record_for_edit(id):
         connObj = sqlite3.connect('users.db')
         connObj.row_factory = sqlite3.Row
         cursorObj = connObj.cursor()
@@ -201,6 +202,18 @@ def view_record(id):
             connObj.close()
             flash("You edited a student record successfully!", "success")
             return redirect(url_for('view_student'))   
+
+
+
+
+
+
+
+
+
+
+
+
 
 # def edit_form(id):
 #     id = request.form['student_id']

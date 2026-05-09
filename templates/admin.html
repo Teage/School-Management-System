@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='admindashboard.css') }}">
-    <style>
+    <!-- <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -45,33 +45,71 @@
         .nav-links a:hover {
             background-color: #0056b3;
         }
-    </style>
+    </style> -->
 </head>
 <body>
-    <div class="container">
-        <h1>Welcome {{admin_name}} to Admin Dashboard</h1>
-        <p class="welcome-message">Hello Admin! Manage your application from here.</p>
-       <div>
-            <div class="nav-links">
-                <a href="{{ url_for('dashboard') }}">Dashboard</a>
-                <a href="/users">Manage Users</a>
-                <a href="/settings">Settings</a>
-                <a href="{{ url_for('logout_route') }}">Logout</a>
-            </div>
-      </div> 
-    </div>
-    <!-- <div class="sidebar">
+    
+    <div class="sidebar">
         <h2>DigitalSchool</h2>
         <ul>
-            <li class="active">Dashboard</li>
-            <li>Students</li>
-            <li>Teachers</li>
-            <li>Courses</li>
-            <li>Attendance</li>
-            <li>Fees</li>
-            <li>Reports</li>
-            <li>Settings</li>
+            <li><a href="#" class="active" data-section="dashboard">Dashboard</a></li>
+            <li><a href="{{ url_for('view_student') }}" data-section="students" class="nav-link">Students</a></li>
+            <li><a href="{{ url_for('view_teacher') }}" data-section="teachers" class="nav-link">Teachers</a></li>
+            <li><a href="#" data-section="#" class="nav-link">Courses</a></li>
+            <li><a href="#" data-section="#" class="nav-link">Attendance</a></li>
+            <li><a href="#" data-section="#" class="nav-link">Fees</a></li>
+            <li><a href="#" data-section="#" class="nav-link">Reports</a></li>
+            <li><a href="#" data-section="#" class="nav-link">Settings</a></li>
         </ul>
-    </div> -->
+    </div>
+    <div class="main-content">
+        <div class="header">
+            <h1>Welcome {{admin_name}} to Admin Dashboard</h1>
+            <!-- <p class="welcome-message">Hello Admin! Manage your application from here.</p> -->
+            <div>
+                    <div class="nav-links">
+                        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                        <a href="/users">Manage Users</a>
+                        <a href="/settings">Settings</a>
+                        <a href="{{ url_for('logout_route') }}">Logout</a>
+                    </div>
+            </div> 
+        </div>
+        <div class="stats-container">
+            <div class="stat-card students">
+                <h3>Total Students</h3>
+                <div class="number">1,245</div>
+            </div>
+            <div class="stat-card teachers">
+                <h3>Total Teachers</h3>
+                <div class="number">48</div>
+            </div>
+            <div class="stat-card courses">
+                <h3>Active Courses</h3>
+                <div class="number">32</div>
+            </div>
+            <div class="stat-card fees">
+                <h3>Pending Fees</h3>
+                <div class="number">$12,500</div>
+            </div>
+        </div>
+
+        <div class="table-container" id="content-area">
+        </div>
+
+        <div id="studentModal" class="modal">
+            
+            <div class="modal-content">
+                <span id="closeModal">&times;</span>
+
+                <div id="modal-body">
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <script src="{{ url_for('static', filename='global.js') }}"></script>
 </body>
 </html>
