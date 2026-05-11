@@ -9,6 +9,7 @@
             min-height: 100vh;
             margin: 0;
             background-color: #f5f6fa;
+            overflow-x: hidden;
         }
 
         /* Sidebar */
@@ -72,12 +73,17 @@
        .align-header{
             display: flex;
             justify-content: space-between;
+            align-items: center;
             background: white;
             padding: 15px 25px;
             border-radius: 10px;
             margin-bottom: 25px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-
+            position: sticky;
+            top: 5px;
+            right: 5px;
+            z-index: 1;
+            overflow: hidden;
 
         }
 
@@ -141,8 +147,8 @@
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-
-            overflow: scroll;
+            overflow-x: auto;
+            /* overflow: scroll; */
             max-height: 400px;
         }
 
@@ -155,6 +161,7 @@
             width: 100%;
             border-collapse: collapse;
             min-width: 900px;
+            align-items: center;
         }
 
         table th, table td {

@@ -61,7 +61,7 @@
             <button type="submit">Filter</button>
         </div>
         <div>
-            <button type="button" value="#" id="openModalBtn">Add Student</button>
+            <button type="button" onclick="open_modal_box('/add_student')" id="openModalBtn">Add Student</button>
         </div>
     </div>
         <!-- update search to ajax respond -->
@@ -108,7 +108,7 @@
                          <td>
                             <a href="{{ url_for('delete_student', id=student.id) }}" 
                             onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
-                            <a href="{{ url_for('edit_student', id=student.id)}}">Edit</a>
+                            <a href="{{ url_for('edit_student', id=student.id) }}" class="edit-student">Edit</a>
                         </td>
                         
                     </tr>

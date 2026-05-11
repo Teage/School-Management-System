@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='admindashboard.css') }}">
+    <link rel="stylesheet" href="{{url_for('static', filename='modalbox.css')}}">
     <!-- <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,7 +53,7 @@
     <div class="sidebar">
         <h2>DigitalSchool</h2>
         <ul>
-            <li><a href="#" class="active" data-section="dashboard">Dashboard</a></li>
+            <!-- <li><a href="#" class="active" data-section="dashboard">Dashboard</a></li> -->
             <li><a href="{{ url_for('view_student') }}" data-section="students" class="nav-link">Students</a></li>
             <li><a href="{{ url_for('view_teacher') }}" data-section="teachers" class="nav-link">Teachers</a></li>
             <li><a href="#" data-section="#" class="nav-link">Courses</a></li>
@@ -97,19 +98,17 @@
         <div class="table-container" id="content-area">
         </div>
 
-        <div id="studentModal" class="modal">
-            
+        <div id="dialog_box" class="modal">
             <div class="modal-content">
                 <span id="closeModal">&times;</span>
-
-                <div id="modal-body">
-
-                </div>
+                    <div id="modal-body">
+                        <!-- Modal content will be loaded here -->
+                    </div>
             </div>
-
         </div>
 
     </div>
     <script src="{{ url_for('static', filename='global.js') }}"></script>
+    <script src="{{ url_for('static', filename='modal.js') }}"></script>
 </body>
 </html>

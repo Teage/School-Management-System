@@ -58,7 +58,7 @@
             <button type="submit">Filter</button>
         </div>
         <div>
-            <button type="button" value="#">Add Teacher</button>
+            <button type="button" value="#" onclick="open_modal_box('/add_teacher')" id="btn-add-teacher">Add Teacher</button>
         </div>
     </div>
         <h1>Teachers List</h1>
@@ -88,7 +88,7 @@
             <td>{{ teacher.phone }}</td>
             <td>{{ teacher.subject }}</td>
              <td>
-                <a href="{{ url_for('view_edit_teacher', id=teacher.teacher_id) }}">Edit</a>
+                <a href="{{ url_for('view_edit_teacher', id=teacher.teacher_id) }}"  class="edit-teacher">Edit</a>
                 <a href="{{ url_for('delete_teacher', id=teacher.teacher_id) }}"
                 onclick="return confirm('Are you sure you want to delete this record?')">Delete</a>
             </td>
