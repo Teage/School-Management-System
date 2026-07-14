@@ -9,15 +9,7 @@
 <body>
     <div class="container">
         <h1>Create Account</h1>
-                {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-            <div class="alert {{ category }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        {% endif %}
-        {% endwith %}
+        {% include '_flash_messages.html' %}
         <form action="/register" method="post">
             <div class="form-group">
                 <label for="username">Username</label>

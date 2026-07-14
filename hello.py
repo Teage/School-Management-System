@@ -3,8 +3,8 @@ from functools import wraps
 from flask import Flask, flash, render_template, redirect, session, url_for,request
 from werkzeug.security import generate_password_hash, check_password_hash
 
-import sqlite3
 import logout
+from db import get_db
 
 app = Flask(__name__)
 app.permanent_session_lifetime = timedelta(hours=1)  # Set session lifetime to 1 hour (3600 seconds)
@@ -23,28 +23,23 @@ def logout_route():
 # def hello(name):
 #     return f'Hello, {name}!'
 
-# Decorator to check if the user is logged in and is an admin
-def admin_required(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        if not session.get('logged_in') or session.get('user_type') != 'admin':
-            flash("Unauthorized access. Please log in as an admin.", "error")
-            return redirect(url_for('login_page'))
-        return f(*args, **kwargs)
-    return wrapper
+# Decorator factory that restricts a route to a logged-in user of the given type
+def role_required(role):
+    labels = {'admin': 'an admin', 'user': 'a user'}
 
-def user_required(f):
-    @wraps(f)
-    def wrapper(*args, **kwargs):
-        if not session.get('logged_in') or session.get('user_type') != 'user':
-            flash("Unauthorized access. Please log in as a user.", "error")
-            return redirect(url_for('login_page'))
-        return f(*args, **kwargs)
-    return wrapper
+    def decorator(f):
+        @wraps(f)
+        def wrapper(*args, **kwargs):
+            if not session.get('logged_in') or session.get('user_type') != role:
+                flash(f"Unauthorized access. Please log in as {labels.get(role, role)}.", "error")
+                return redirect(url_for('login_page'))
+            return f(*args, **kwargs)
+        return wrapper
+    return decorator
 
 # Admin route that requires the user to be logged in as an admin with the admin_required decorator
 @app.route('/admin')
-@admin_required
+@role_required('admin')
 def admin():
     if 'user_id' in session and session.get('user_type') == 'admin':
         return render_template('admin.html', admin_name=session.get('username'))
@@ -52,26 +47,23 @@ def admin():
     return render_template('/')    
 
 @app.route('/user')
-@user_required
+@role_required('user')
 def user():
     return render_template('user.html', guest_name=session.get('username'))
 
 
 # Initialize the SQLite database and create the users table if it doesn't exist
 def init_db():
-    connectObj = sqlite3.connect('users.db')
-    cursorObj = connectObj.cursor()
-    cursorObj.execute('''
-        CREATE TABLE IF NOT EXISTS LoginDetails (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            email TEXT UNIQUE NOT NULL,
-            username TEXT  NOT NULL,
-            password TEXT NOT NULL,
-            user_type TEXT NOT NULL
-        )
-    ''')
-    connectObj.commit()
-    connectObj.close()
+    with get_db() as connectObj:
+        connectObj.execute('''
+            CREATE TABLE IF NOT EXISTS LoginDetails (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                email TEXT UNIQUE NOT NULL,
+                username TEXT  NOT NULL,
+                password TEXT NOT NULL,
+                user_type TEXT NOT NULL
+            )
+        ''')
 
     # call the function to initialize the database when the application starts
 init_db()
@@ -91,26 +83,20 @@ def register_user():
              flash("Passwords do not match.", "error")
           
     # Store the hashed password in the database
-        connectObj = sqlite3.connect('users.db')
-        cursorObj = connectObj.cursor()
+        with get_db() as connectObj:
+            cursorObj = connectObj.cursor()
 
-        cursorObj.execute('SELECT * FROM LoginDetails WHERE email = ?', (email,))
-        existing_user = cursorObj.fetchone()
+            cursorObj.execute('SELECT * FROM LoginDetails WHERE email = ?', (email,))
+            existing_user = cursorObj.fetchone()
 
-        # Check if the user already exists based on email
-        if existing_user:
-           
-            flash("User already exists. Please choose a different username or email.", "error")
-            connectObj.close()
-            return redirect(url_for('register_user'))
+            # Check if the user already exists based on email
+            if existing_user:
+                flash("User already exists. Please choose a different username or email.", "error")
+                return redirect(url_for('register_user'))
 
-        actual_password = generate_password_hash(password)
-        cursorObj.execute('INSERT INTO LoginDetails (email, username, password, user_type) VALUES (?, ?, ?, ?)',
-                            (email,username,actual_password, user_type))
-        
-        
-        connectObj.commit()
-        connectObj.close()
+            actual_password = generate_password_hash(password)
+            cursorObj.execute('INSERT INTO LoginDetails (email, username, password, user_type) VALUES (?, ?, ?, ?)',
+                                (email,username,actual_password, user_type))
 
         flash("Registration successful! Please log in.", "success")
         return redirect(url_for('login_page'))
@@ -127,13 +113,12 @@ def validate_login():
     user_password = request.form['password']
 
     #fetchout user password from LoginDetails Table and compare the password with the hashed password in the database
-    connectObj = sqlite3.connect('users.db')
-    cursorObj = connectObj.cursor()
+    with get_db() as connectObj:
+        cursorObj = connectObj.cursor()
 
-    cursorObj.execute('SELECT id,password FROM LoginDetails WHERE username = ? AND user_type = ?',
-                       (username, user_type))
-    result = cursorObj.fetchone()
-    connectObj.close()
+        cursorObj.execute('SELECT id,password FROM LoginDetails WHERE username = ? AND user_type = ?',
+                           (username, user_type))
+        result = cursorObj.fetchone()
 
     if result:
         user_id,stored_password = result
