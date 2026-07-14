@@ -1,3 +1,5 @@
+import os
+import secrets
 from datetime import timedelta
 from functools import wraps
 from flask import Flask, flash, render_template, redirect, session, url_for,request
@@ -8,8 +10,14 @@ import logout
 
 app = Flask(__name__)
 app.permanent_session_lifetime = timedelta(hours=1)  # Set session lifetime to 1 hour (3600 seconds)
- # Set a secret key for session management and flash messages
-app.secret_key = "TheMasterSeries1234" 
+# Load the secret key from the environment; fall back to an ephemeral random
+# key for local development so no secret is ever hardcoded in source.
+app.secret_key = os.environ.get("FLASK_SECRET_KEY") or secrets.token_hex(32)
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=os.environ.get("FLASK_COOKIE_SECURE", "").lower() == "true",
+)
 # returning a string variable in the URL
 @app.route('/', methods=['GET', 'POST'])
 def login_page():
@@ -81,15 +89,22 @@ init_db()
 @app.route('/register', methods=['GET', 'POST'])
 def register_user():
     if request.method == 'POST':
-        email = request.form['email']
-        username = request.form['username']
-        user_type = request.form['user']
-        password = request.form['password']
-        confirm_password = request.form['confirm_password']
+        email = request.form.get('email', '').strip()
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '')
+        confirm_password = request.form.get('confirm_password', '')
+        # New accounts are always created as regular users. Elevating an account
+        # to 'admin' must be done out-of-band, never from unauthenticated input.
+        user_type = 'user'
+
+        if not email or not username or not password:
+            flash("All fields are required.", "error")
+            return redirect(url_for('register_user'))
 
         if password != confirm_password:
-             flash("Passwords do not match.", "error")
-          
+            flash("Passwords do not match.", "error")
+            return redirect(url_for('register_user'))
+
     # Store the hashed password in the database
         connectObj = sqlite3.connect('users.db')
         cursorObj = connectObj.cursor()
@@ -151,7 +166,6 @@ def validate_login():
             #     return redirect(url_for('admin', username=username))
             # elif user_type == 'user':
             #     return redirect(url_for('user', username=username))
-    print(session) 
     flash("Invalid credentials. Please try again.", "error")
     return redirect(url_for('login_page'))
 
@@ -187,4 +201,7 @@ def blog_page(post_id):
           
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Never enable the debugger by default: it exposes an interactive console
+    # that allows arbitrary code execution. Opt in explicitly via FLASK_DEBUG.
+    debug_mode = os.environ.get("FLASK_DEBUG", "").lower() == "true"
+    app.run(debug=debug_mode)

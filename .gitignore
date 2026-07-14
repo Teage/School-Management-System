@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Local SQLite database (contains user data / password hashes)
+users.db
+*.sqlite3
+
+# Environment / secrets
+.env
+.env.*
